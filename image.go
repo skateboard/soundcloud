@@ -5,18 +5,6 @@ import (
 	"image/color"
 )
 
-// func invertImageColor(inFile, outfile *os.File) error {
-// 	srcImage, _, err := image.Decode(inFile)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	newImage := invertImageColor(srcImage)
-// 	png.Encode(outfile, newImage)
-
-// 	return nil
-// }
-
 func invertImageColor(srcImage image.Image) image.Image {
 
 	// Create a new image
