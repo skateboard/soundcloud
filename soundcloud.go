@@ -31,7 +31,7 @@ func New(trackURL string, options *Options) *Soundcloud {
 func (sc *Soundcloud) Run() {
 	scAPI, err := soundcloudapi.New(soundcloudapi.APIOptions{})
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (sc *Soundcloud) Run() {
 		URL: sc.trackURL,
 	})
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 	track := tracks[0]
@@ -54,15 +54,19 @@ func (sc *Soundcloud) Run() {
 
 	name := fmt.Sprintf("%s - %s", track.User.Username, track.Title)
 
+	log.Println("soundcloud: creating remix folder:", name)
+
 	err = os.Mkdir(name, 0777)
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 
-	trackArt, err := sc.extractTrackArt()
+	log.Println("soundcloud: extracting track art")
+
+	trackArt, err := sc.extractTrackArt(track.ArtworkURL)
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 
@@ -71,7 +75,7 @@ func (sc *Soundcloud) Run() {
 
 	trackArtImage, err := jpeg.Decode(buff)
 	if err != nil {
-		log.Println("sc:", err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 
@@ -89,7 +93,7 @@ func (sc *Soundcloud) Run() {
 
 	remixTrackArt, err := os.Create(fmt.Sprintf("./%s/trackart.png", name))
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 	defer remixTrackArt.Close()
@@ -102,17 +106,16 @@ func (sc *Soundcloud) Run() {
 
 	mp3Out, err := os.Create(fmt.Sprintf("./%s/music.mp3", name))
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 	defer mp3Out.Close()
 
 	err = scAPI.DownloadTrack(tracks[0].Media.Transcodings[0], mp3Out)
 	if err != nil {
-		log.Println(err)
+		log.Println("soundcloud ERROR:", err)
 		return
 	}
 
 	log.Println("soundcloud: saved track")
-
 }
