@@ -1,5 +1,5 @@
 # Soundcloud
-a tool used to make remixing songs easier (automatiacally inverts track art colors and watermarks the trackart)
+a tool used to make remixing songs easier (automatiacally inverts track art colors and watermarks the trackart) also downloads the track .mp3
 
 # Usage
 ```
